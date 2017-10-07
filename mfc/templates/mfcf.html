@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}書籍の一覧{% endblock title %}
+{% load mfc_extras %}
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
+    <h3 class="page-header">{{ name }}の詳細</h3>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>時間</th>
+          <th>Kit</th>
+          <th>ステージ</th>
+          <th>プレイヤー1</th>
+          <th>プレイヤー2</th>
+          <th>プレイヤー1のオッズ</th>
+          <th>プレイヤー2のオッズ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mfc in mfcf %}
+        <tr>
+        <td>{{ mfc.datetime }}</td>
+        <td>{{ mfc.kit }}</td>
+        <td>{{ mfc.stage }}円</td>
+        <td>{{ mfc.player1 }}</td>
+        <td>{{ mfc.player2 }}</td>
+        <td>{{ mfc.odds1 }}</td>
+        <td>{{ mfc.odds2 }}</td>
+        <td>{% win mfc.uuid1 mfc.winner mfc.player1 mfc.player2 %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock content %}

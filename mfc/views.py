@@ -11,3 +11,15 @@ def mfc(request,**kwargs):
                   {'mfcb' : mfcb,
                    'name' : q
                    },dict(kwargs))
+#
+# def playerview(request,**kwargs):
+#     q = kwargs['name']
+#     mfcb = MfcBet.objects.filter(name=q)
+#     mfcf = MfcBet.objects.filter(name=q)
+
+def mfcfight(request,**kwargs):
+    q = kwargs['name']
+    mfcf = MfcFight.objects.filter(player1=q)
+    return render(request, 'mfcf.html',
+                  {'mfcf' : mfcf,
+                   'name' : q},dict(kwargs))
