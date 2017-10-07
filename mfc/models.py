@@ -82,6 +82,12 @@ class MfcproBet(models.Model):
         return self.name
 
 
+    def __float__(self):
+        return self.profit
+
+
+
+
 class MfcproFight(models.Model):
     datetime = models.DateTimeField()
     kit = models.CharField(max_length=40)
