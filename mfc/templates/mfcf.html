@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %}書籍の一覧{% endblock title %}
-{% load mfc_extras %}
 {% block extrahead %}
 <style>
 table {
@@ -24,6 +23,7 @@ table {
           <th>プレイヤー2</th>
           <th>プレイヤー1のオッズ</th>
           <th>プレイヤー2のオッズ</th>
+          <th>賞金</th>
         </tr>
       </thead>
       <tbody>
@@ -36,7 +36,7 @@ table {
         <td>{{ mfc.player2 }}</td>
         <td>{{ mfc.odds1 }}</td>
         <td>{{ mfc.odds2 }}</td>
-        <td>{% win mfc.uuid1 mfc.winner mfc.player1 mfc.player2 %}</td>
+        <td>{{ mfc.prize }}</td>
         </tr>
       {% endfor %}
       </tbody>
