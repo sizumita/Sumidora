@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}書籍の一覧{% endblock title %}
+
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
+    <h3 class="page-header">{{ name }}の詳細</h3>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>時間</th>
+          <th>Betした相手</th>
+          <th>Bet金額</th>
+          <th>Betした相手が勝ったか</th>
+          <th>オッズ</th>
+          <th>利益</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in mfcb %}
+        <tr>
+        <td>{{ user.datetime }}</td>
+        <td>{{ user.fighter_name }}</td>
+        <td>{{ user.bet }}円</td>
+        <td>{{ user.win }}</td>
+        <td>{{ user.odds }}</td>
+        <td>{{ user.profit }}円</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock content %}
