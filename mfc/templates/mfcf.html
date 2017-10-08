@@ -24,6 +24,7 @@ table {
           <th>プレイヤー1のオッズ</th>
           <th>プレイヤー2のオッズ</th>
           <th>賞金</th>
+          <th>その他</th>
         </tr>
       </thead>
       <tbody>
@@ -32,11 +33,25 @@ table {
         <td>{{ mfc.datetime }}</td>
         <td>{{ mfc.kit }}</td>
         <td>{{ mfc.stage }}</td>
-        <td><a class="nav-item nav-link" href="{% url 'mfc:' %}">{{ mfc.player1 }}</a></td>
-        <td>{{ mfc.player2 }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player1%}">{{ mfc.player1 }}</a></td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player2 %}">{{ mfc.player2 }}</a></td>
         <td>{{ mfc.odds1 }}</td>
         <td>{{ mfc.odds2 }}</td>
         <td>{{ mfc.prize }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id%}">詳細</a></td>
+        </tr>
+      {% endfor %}
+        {% for mfc in mfcfs %}
+        <tr>
+        <td>{{ mfc.datetime }}</td>
+        <td>{{ mfc.kit }}</td>
+        <td>{{ mfc.stage }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player1 %}">{{ mfc.player1 }}</a></td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player2 %}">{{ mfc.player2 }}</a></td>
+        <td>{{ mfc.odds1 }}</td>
+        <td>{{ mfc.odds2 }}</td>
+        <td>{{ mfc.prize }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id%}">詳細</a></td>
         </tr>
       {% endfor %}
       </tbody>

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import Http404
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 # Create your views here.
@@ -13,12 +14,12 @@ def mfc(request,**kwargs):
                    'name' : q
                    },dict(kwargs))
 
+
 def playerview(request, **kwargs):
     wins = 0
     lose = 0
     mony = 0
     usemony = 0
-    i = []
     q = kwargs['name']
     mfcb = MfcBet.objects.filter(name=q)
     mfcpb = MfcproBet.objects.filter(name=q)
@@ -62,8 +63,89 @@ def playerview(request, **kwargs):
 
 def mfcfight(request,**kwargs):
     q = kwargs['name']
-    mfcf = MfcFight.objects.filter(player1=q),MfcFight.objects.filter(player2=q)
-    print(mfcf)
+    mfcf = MfcFight.objects.filter(player1=q)
+    mfcf2 = MfcFight.objects.filter(player2=q)
+
     return render(request, 'mfcf.html',
                   {'mfcf' : mfcf,
+                   'mfcfs' : mfcf2,
                    'name' : q},dict(kwargs))
+
+def fightdata(request,**kwargs):
+    q = kwargs['name']
+    try:
+        if int(q) < 24 :
+            return render(request,"eroor.html")
+    except:
+        return render(request,"eroor.html")
+    param_value = request.GET.get("q")
+    player1 = '負け'
+    player2 = '負け'
+    winner1 = 0
+    winner2 = 0
+    lose1 = 0
+    lose2 = 0
+    prize1 = 0
+    prize2 = 0
+    if param_value != "pro":
+        fight = MfcFight.objects.filter(id=q)
+        bet = MfcBet.objects.filter(fight_id=q)
+        for x in fight:
+            old = MfcFight.objects.filter(player1=x.player1, player2=x.player2)
+            olds = MfcFight.objects.filter(player1=x.player2, player2=x.player1)
+    else:
+        fight = MfcproFight.objects.filter(id=q)
+        bet = MfcproBet.objects.filter(fight_id=q)
+        for x in fight:
+            old = MfcproFight.objects.filter(player1=x.player1, player2=x.player2)
+            olds = MfcproFight.objects.filter(player1=x.player2, player2=x.player1)
+
+
+
+
+    for x in old:
+        if x.winner == x.player1:
+            winner1 = winner1 + 1
+            lose2 = lose2 + 1
+        else:
+            winner2 = winner2 + 1
+            lose1 = lose1 + 1
+
+    for x in olds:
+        if x.winner != x.player1:
+            winner1 = winner1 + 1
+            lose2 = lose2 + 1
+        else:
+            winner2 = winner2 + 1
+            lose1 = lose1 + 1
+
+    alls = winner1 + winner2
+
+
+    for x in fight:
+        if x.winner == x.player1:
+            player1 = '勝ち'
+            prize1 = x.prize
+        else:
+            player2 = '勝ち'
+            prize2 = x.prize
+
+
+
+    return render(request,'fight_data.html',
+                  {'fight' : fight,
+                   'bet' : bet,
+                   'player1' : player1,
+                   'player2' : player2,
+                   'pr1' : prize1,
+                   'pr2' : prize2,
+                   'winner1' : winner1,
+                   'winner2' : winner2,
+                   'lose1' : lose1,
+                   'lose2' : lose2,
+                   'alls' : alls
+                   },
+                  dict(kwargs))
+
+
+
