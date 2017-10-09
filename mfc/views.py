@@ -60,12 +60,8 @@ def playerview(request, **kwargs):
     q = kwargs['name']
     param_value = kwargs['mode']
     if param_value == "pro":
-    mfcb = MfcBet.objects.filter(name=q)
-    mfcpb = MfcproBet.objects.filter(name=q)
     mfcf = MfcFight.objects.filter(player1=q) #USE
     mfcf2 = MfcFight.objects.filter(player2=q) #USE
-    mfcpf = MfcproFight.objects.filter(player1=q)#USE
-    mfcpf2 = MfcproFight.objects.filter(player2=q)#USE
     fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
 
 
