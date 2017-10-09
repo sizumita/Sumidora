@@ -52,12 +52,17 @@ def mfc(request,**kwargs):
                    'old' : old
                    },dict(kwargs))
 
+def test(request):
+    pass
+
 
 def playerview(request, **kwargs):
     wins = 0
     lose = 0
     playerprize = 0
     q = kwargs['name']
+    param_value = kwargs['mode']
+    if param_value == "pro":
     mfcb = MfcBet.objects.filter(name=q)
     mfcpb = MfcproBet.objects.filter(name=q)
     mfcf = MfcFight.objects.filter(player1=q) #USE
