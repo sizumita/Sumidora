@@ -5,21 +5,58 @@ from django.http import HttpResponse
 # Create your views here.
 from .models import *
 from pprint import pprint
+from django.db.models import Q
+
+# for x in mfcb:
+#     num = x.profit
+#     mony = round((mony + num))
+#
+# for x in mfcpb:
+#     num = x.profit
+#     mony = round((mony + num))
+#
+# for x in mfcb:
+#     num = x.bet
+#     usemony = round((usemony + num))
+#
+# for x in mfcpb:
+#     num = x.bet
+#     usemony = round((usemony + num))
+
+
+
+
+
+
+
 
 def mfc(request,**kwargs):
     q = kwargs['name']
-    mfcb = MfcBet.objects.filter(name=q)
+    page = 1
+    param_value = kwargs['page']
+    param_value = int(param_value)
+    nextpage = param_value + 1
+    if param_value == 1:
+        old = 1
+    else:
+        old = param_value - 1
+    page = param_value * 20
+    pages = page - 20
+    mfcb = MfcBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
     return render(request, 'mfc.html',
                   {'mfcb' : mfcb,
-                   'name' : q
+                   'name' : q,
+                   'page' : page,
+                   'pages' : pages,
+                   'next' : nextpage,
+                   'old' : old
                    },dict(kwargs))
 
 
 def playerview(request, **kwargs):
     wins = 0
     lose = 0
-    mony = 0
-    usemony = 0
+    playerprize = 0
     q = kwargs['name']
     mfcb = MfcBet.objects.filter(name=q)
     mfcpb = MfcproBet.objects.filter(name=q)
@@ -27,48 +64,43 @@ def playerview(request, **kwargs):
     mfcf2 = MfcFight.objects.filter(player2=q) #USE
     mfcpf = MfcproFight.objects.filter(player1=q)#USE
     mfcpf2 = MfcproFight.objects.filter(player2=q)#USE
+    fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('datetime')[0:20]
 
-    for x in mfcb:
-        num = x.profit
-        mony = mony + num
-
-    for x in mfcpb:
-        num = x.profit
-        mony = mony + num
-
-    for x in mfcb:
-        num = x.bet
-        usemony = usemony + num
-
-    for x in mfcpb:
-        num = x.bet
-        usemony = usemony + num
 
     for x in mfcf:
         if x.winner == x.uuid1:
             wins = wins + 1
+            playerprize = round(playerprize + x.prize)
         else:
             lose = lose + 1
 
-    kd = wins / lose
+
+    for x in mfcf2:
+        if x.winner != x.uuid1:
+            wins = wins + 1
+        else:
+            lose = lose + 1
+            playerprize = round(playerprize + x.prize)
+    score = round(playerprize / (wins + lose) * 0.001)
+    kd = round((wins / lose),2)
+    playerprize = playerprize - (wins + lose)*10000
     return render(request, 'playerdata.html',
                   {'kd' : kd,
                    'wins' : wins,
                    'lose' : lose,
-                   'mony' : mony,
-                   'usemony' : usemony,
+                   'prize' : playerprize,
+                   'score' : score,
+                   'fight' : fight,
                    'name' : q},dict(kwargs))
 
 
 
 def mfcfight(request,**kwargs):
     q = kwargs['name']
-    mfcf = MfcFight.objects.filter(player1=q)
-    mfcf2 = MfcFight.objects.filter(player2=q)
+    mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
 
     return render(request, 'mfcf.html',
                   {'mfcf' : mfcf,
-                   'mfcfs' : mfcf2,
                    'name' : q},dict(kwargs))
 
 def fightdata(request,**kwargs):
