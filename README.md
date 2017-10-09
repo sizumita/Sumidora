@@ -1,14 +1,25 @@
-# Sumidora
-#いまできてること
+SQMFC
+====
+
+Overview
+
+## Description
+man10サーバー用
+## Demo
+なし
+## VS.
+
+## Requirement
+
+## Usage
+
+## Install
+
+## Contribution
+
+## Licence
 
 
-プレイヤーのしょうさいがめん
-プレイヤーのベット履歴
-ぷレイヤーのバトル履歴
-１つ１つのバトル履歴
+## Author
 
-
-#やりたいこと
-
-
-（たかさん書いてください）
+Sumidora
