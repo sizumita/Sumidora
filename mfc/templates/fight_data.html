@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
-{% block title %}書籍の一覧{% endblock title %}
+{% load humanize %}
+{% block title %}バトルデータ{% endblock title %}
 {% block extrahead %}
 <style>
 table {
@@ -12,7 +12,12 @@ table {
 
 {% block content %}
 {#    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>#}
-    <h3 class="page-header">戦いのデータ</h3>
+    <h3 class="page-header">{% ifequal param 'pro' %}
+                            MFCPRO
+        {% else %}
+        MFC
+        {% endifequal %}
+        のバトルデータ</h3>
     <table class="table table-striped table-bordered">
         {% for mfc in fight %}
             {{ mfc.datetime }}  Kit {{ mfc.kit }}
@@ -25,9 +30,9 @@ table {
         </tr>
         <tr>
         <td>odds</td>
-        <td>{{ mfc.odds1 }}</td>
+        <td>{{ mfc.odds1|floatformat:-2 }}</td>
         <td> </td>
-        <td>{{ mfc.odds2 }}</td>
+        <td>{{ mfc.odds2|floatformat:-2 }}</td>
         </tr>
         <tr>
         <td>勝ち負け</td>
@@ -37,9 +42,9 @@ table {
         </tr>
         <tr>
         <td>獲得賞金</td>
-        <td>{{ pr1 }}円</td>
+        <td>{{ pr1|intcomma }}円</td>
         <td></td>
-        <td>{{ pr2 }}円</td>
+        <td>{{ pr2|intcomma }}円</td>
         </tr>
         <tr>
         <td>ベット数</td>

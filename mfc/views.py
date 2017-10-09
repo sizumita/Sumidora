@@ -33,7 +33,7 @@ from django.db.models import Q
 def mfc(request,**kwargs):
     q = kwargs['name']
     page = 1
-    param_value = kwargs['page']
+    param_value = request.GET.get("page")
     param_value = int(param_value)
     nextpage = param_value + 1
     if param_value == 1:
@@ -58,11 +58,16 @@ def playerview(request, **kwargs):
     lose = 0
     playerprize = 0
     q = kwargs['name']
-    param_value = kwargs['mode']
-    if param_value == "pro":
-    mfcf = MfcFight.objects.filter(player1=q) #USE
-    mfcf2 = MfcFight.objects.filter(player2=q) #USE
-    fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+    param_value = request.GET.get("mode")
+    if param_value != "pro":
+        mfcf = MfcFight.objects.filter(player1=q) #USE
+        mfcf2 = MfcFight.objects.filter(player2=q) #USE
+        fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+    else:
+        mfcf = MfcproFight.objects.filter(player1=q)#USE
+        mfcf2 = MfcproFight.objects.filter(player2=q)#USE
+        fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+
 
 
     for x in mfcf:
@@ -89,26 +94,35 @@ def playerview(request, **kwargs):
                    'prize' : playerprize,
                    'score' : score,
                    'fight' : fight,
+                   'param' : param_value,
                    'name' : q},dict(kwargs))
 
 
 
 def mfcfight(request,**kwargs):
     q = kwargs['name']
-    mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
-
+    param_value = request.GET.get("mode")
+    if param_value == 'pro':
+        mfcf = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
+    else:
+        mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
     return render(request, 'mfcf.html',
                   {'mfcf' : mfcf,
-                   'name' : q},dict(kwargs))
+                   'name' : q,
+                   'param' : param_value},dict(kwargs))
+
+
+
+
 
 def fightdata(request,**kwargs):
-    q = kwargs['name']
+    q = kwargs['number']
     try:
         if int(q) < 24 :
             return render(request,"eroor.html")
     except:
         return render(request,"eroor.html")
-    param_value = request.GET.get("q")
+    param_value = request.GET.get("mode")
     player1 = '負け'
     player2 = '負け'
     winner1 = 0
@@ -161,7 +175,6 @@ def fightdata(request,**kwargs):
             prize2 = x.prize
 
 
-
     return render(request,'fight_data.html',
                   {'fight' : fight,
                    'bet' : bet,
@@ -173,7 +186,8 @@ def fightdata(request,**kwargs):
                    'winner2' : winner2,
                    'lose1' : lose1,
                    'lose2' : lose2,
-                   'alls' : alls
+                   'alls' : alls,
+                   'param' : param_value
                    },
                   dict(kwargs))
 
