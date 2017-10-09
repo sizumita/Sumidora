@@ -52,9 +52,6 @@ def mfc(request,**kwargs):
                    'old' : old
                    },dict(kwargs))
 
-def test(request):
-    pass
-
 
 def playerview(request, **kwargs):
     wins = 0
