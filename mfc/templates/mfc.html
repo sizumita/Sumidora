@@ -13,7 +13,7 @@ table {
 
 {% block content %}
     <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
-    <h3 class="page-header">{{ name }}のベッド履歴</h3>
+    <h3 class="page-header">{{ name }}のベット履歴</h3>
     <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?page={{ old }}">前のページ</a>　|　
     <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page={{ next }}">次のページ</a>　|　
     <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">プレイヤーデータ</a>　|　
@@ -34,9 +34,9 @@ table {
         <tr>
         <td>{{ mfc.datetime }}</td>
         <td>{{ mfc.fighter_name }}</td>
-        <td>{{ mfc.bet|floatformat|intcomma }}円</td>
+        <td>{{ mfc.bet|floatformat:0|intcomma }}円</td>
         <td>{{ mfc.odds|floatformat:-2 }}</td>
-        <td>{{ mfc.profit|floatformat|intcomma }}円</td>
+        <td>{{ mfc.profit|floatformat:0|intcomma }}円</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.fight_id %}">詳細</a></td>
         </tr>
       {% endfor %}

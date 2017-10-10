@@ -204,13 +204,13 @@ def fightdata(request,**kwargs):
     prize2 = 0
     if param_value != "pro":
         fight = MfcFight.objects.filter(id=q)
-        bet = MfcBet.objects.filter(fight_id=q)
+        bet = MfcBet.objects.filter(fight_id=q).order_by("-bet")
         for x in fight:
             old = MfcFight.objects.filter(player1=x.player1, player2=x.player2)
             olds = MfcFight.objects.filter(player1=x.player2, player2=x.player1)
     else:
         fight = MfcproFight.objects.filter(id=q)
-        bet = MfcproBet.objects.filter(fight_id=q)
+        bet = MfcproBet.objects.filter(fight_id=q).order_by("-bet")
         for x in fight:
             old = MfcproFight.objects.filter(player1=x.player1, player2=x.player2)
             olds = MfcproFight.objects.filter(player1=x.player2, player2=x.player1)
@@ -263,4 +263,14 @@ def fightdata(request,**kwargs):
                   dict(kwargs))
 
 
+
+
+
+
+
+
+
+def ranking(requset,**kwargs):
+    q = kwargs['name']
+    model = MfcBet.objects.filter(name=q).only('profit').count()
 

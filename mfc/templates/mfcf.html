@@ -56,9 +56,9 @@ table {
             {% else %}
             {{ mfc.player2|default_if_none:"なし" }}
         {% endifequal %}</td>
-            <td>{{ mfc.prize|floatformat|intcomma }}</td>
+            <td>{{ mfc.prize|floatformat|intcomma }}円</td>
 
-        <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id%}">詳細</a></td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id%}?mode=pro">詳細</a></td>
         </tr>
       {% endfor %}
       </tbody>
