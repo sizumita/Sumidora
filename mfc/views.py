@@ -34,15 +34,25 @@ def mfc(request,**kwargs):
     q = kwargs['name']
     page = 1
     param_value = request.GET.get("page")
-    param_value = int(param_value)
-    nextpage = param_value + 1
-    if param_value == 1:
+    try:
+        param_value = int(param_value)
+        nextpage = param_value + 1
+        if param_value == 1:
+            old = 1
+        else:
+            old = param_value - 1
+        page = param_value * 20
+        pages = page - 20
+    except:
+        pages = 0
+        page = 20
         old = 1
+        nextpage = 2
+    param_values = request.GET.get("mode")
+    if param_values == 'pro':
+        mfcb = MfcproBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
     else:
-        old = param_value - 1
-    page = param_value * 20
-    pages = page - 20
-    mfcb = MfcBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
+        mfcb = MfcBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
     return render(request, 'mfc.html',
                   {'mfcb' : mfcb,
                    'name' : q,
@@ -53,63 +63,124 @@ def mfc(request,**kwargs):
                    },dict(kwargs))
 
 
-def playerview(request, **kwargs):
-    wins = 0
-    lose = 0
-    playerprize = 0
-    q = kwargs['name']
-    param_value = request.GET.get("mode")
-    if param_value != "pro":
-        mfcf = MfcFight.objects.filter(player1=q) #USE
-        mfcf2 = MfcFight.objects.filter(player2=q) #USE
-        fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
-    else:
-        mfcf = MfcproFight.objects.filter(player1=q)#USE
-        mfcf2 = MfcproFight.objects.filter(player2=q)#USE
-        fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
-
-
-
-    for x in mfcf:
-        if x.winner == x.uuid1:
-            wins = wins + 1
-            playerprize = round(playerprize + x.prize)
-        else:
-            lose = lose + 1
-
-
-    for x in mfcf2:
-        if x.winner != x.uuid1:
-            wins = wins + 1
-        else:
-            lose = lose + 1
-            playerprize = round(playerprize + x.prize)
-    score = round(playerprize / (wins + lose) * 0.001)
-    kd = round((wins / lose),2)
-    playerprize = playerprize - (wins + lose)*10000
-    return render(request, 'playerdata.html',
-                  {'kd' : kd,
-                   'wins' : wins,
-                   'lose' : lose,
-                   'prize' : playerprize,
-                   'score' : score,
-                   'fight' : fight,
-                   'param' : param_value,
-                   'name' : q},dict(kwargs))
-
-
-
 def mfcfight(request,**kwargs):
+    page = 1
+    param_values = request.GET.get("page")
+    if param_values:
+        param_values = int(param_values)
+        nextpage = param_values + 1
+        if param_values == 1:
+            old = 1
+        else:
+            old = param_values - 1
+        page = param_values * 20
+        pages = page - 20
+
+    else:
+        page = 20
+        pages = 0
+        nextpage = 2
+        old = 1
     q = kwargs['name']
     param_value = request.GET.get("mode")
     if param_value == 'pro':
-        mfcf = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
+        mfcf = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
     else:
-        mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')
+        mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
     return render(request, 'mfcf.html',
                   {'mfcf' : mfcf,
                    'name' : q,
+                   'page': page,
+                   'pages': pages,
+                   'next': nextpage,
+                   'old': old,
                    'param' : param_value},dict(kwargs))
+
+
+
+def playerview(request, **kwargs):
+    q = kwargs['name']
+    param_value = request.GET.get("mode")
+    type = request.GET.get('type')
+    if type != 'bet':
+        wins = 0
+        lose = 0
+        playerprize = 0
+        if param_value != "pro":
+            mfcf = MfcFight.objects.filter(player1=q)
+            mfcf2 = MfcFight.objects.filter(player2=q)
+            fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+        else:
+            mfcf = MfcproFight.objects.filter(player1=q)
+            mfcf2 = MfcproFight.objects.filter(player2=q)
+            fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+
+
+
+        for x in mfcf:
+            if x.winner == x.uuid1:
+                wins = wins + 1
+                playerprize = round(playerprize + x.prize)
+            else:
+                lose = lose + 1
+        for x in mfcf2:
+            if x.winner != x.uuid1:
+                wins = wins + 1
+            else:
+                lose = lose + 1
+                playerprize = round(playerprize + x.prize)
+        all = wins + lose + playerprize
+        if all > 0:
+            score = round(playerprize / (wins + lose) * 0.001)
+            kd = round((wins / lose),2)
+            playerprize = playerprize - (wins + lose)*10000
+        else:
+            return render_to_response("eroor.html")
+        return render(request, 'playerdata.html',
+                      {'kd' : kd,
+                       'wins' : wins,
+                       'lose' : lose,
+                       'prize' : playerprize,
+                       'score' : score,
+                       'fight' : fight,
+                       'param' : param_value,
+                       'name' : q,
+                       'type' : type},dict(kwargs))
+
+    else:
+        profit = 0
+        bet = 0
+        num = 0
+        win = 0
+        lose = 0
+        if param_value == 'pro':
+            mfc = MfcproBet.objects.filter(name=q)
+        else:
+            mfc = MfcBet.objects.filter(name=q)
+        for x in mfc:
+            profit = profit + x.profit
+            bet = bet + x.bet
+            num = num + 1
+            if x.win == 1:
+                win = win + 1
+            else:
+                lose = lose + 1
+        mony = profit / bet * 100
+        return render(request,'playerbet.html',
+                      {
+                          "name" : q,
+                          "profit" : profit,
+                          "bet" : bet,
+                          'num' : num,
+                          "mony" : mony,
+                          'win' : win,
+                          'lose' : lose,
+                          'type' : type,
+                          "param" : param_value
+                      },dict(kwargs))
+
+
+
 
 
 
@@ -121,7 +192,7 @@ def fightdata(request,**kwargs):
         if int(q) < 24 :
             return render(request,"eroor.html")
     except:
-        return render(request,"eroor.html")
+        return render_to_response("eroor.html")
     param_value = request.GET.get("mode")
     player1 = '負け'
     player2 = '負け'

@@ -6,6 +6,5 @@ urlpatterns = [
     url(r'fight/(?P<name>[\w-]+)/$', views.mfcfight, name='fight'),
     url(r'playerdata/(?P<name>[\w-]+)/$', views.playerview, name='player_data'),
     url(r'fightdata/(?P<number>[\w-]+)/$', views.fightdata, name='fight_data'),
-    url(r'eroor$', views.fightdata, name='EROOR'),
 
 ]

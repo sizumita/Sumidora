@@ -18,16 +18,17 @@ table {
         {% else %}
         MFC
     {% endifequal %}
-        のデータ</h3>
+        のバトルデータ</h3>
     {% ifequal param 'pro' %}
         <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">MFC</a>　
-        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro">バトルデータ</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro&page=1">バトル履歴</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>|
+            　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro&type=bet">ベットデータへ</a>
     {% else %}
         <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro">MFCPRO</a>　|　
-        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}">バトルデータ</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?page=1">バトル履歴</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>　|　
-
+            　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?type=bet">ベットデータへ</a>
     {% endifequal %}
     <table class="table table-striped table-bordered">
       <thead>
