@@ -14,14 +14,14 @@ table {
     <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
     <h3 class="page-header">{{ name }}の詳細</h3>
     {% ifequal param 'pro' %}
-            <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?mode=pro&page={{ old }}">前のページ</a>　|　
-    <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?mode=pro&page={{ next }}">次のページ</a>　|　
+            <a class="nav-item nav-link" href="{% url 'mfc:fight' name  %}?mode=pro&page={{ old }}">前のページ</a>　|　
+    <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro&page={{ next }}">次のページ</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}">MFC</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">プレイヤーデータ</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>　　
     {% else %}
-                    <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?page={{ old }}">前のページ</a>　|　
-    <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page={{ next }}">次のページ</a>　|　
+                    <a class="nav-item nav-link" href="{% url 'mfc:fight' name  %}?page={{ old }}">前のページ</a>　|　
+    <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?page={{ next }}">次のページ</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro">MFCPRO</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">プレイヤーデータ</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>　|　
