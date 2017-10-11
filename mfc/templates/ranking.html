@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}プレイヤーランキング{% endblock title %}
+
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?page={{ old }}">前のページ</a>　|　
+    <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page={{ next }}">次のページ</a>　|　
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>総Bet金額</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mfc in model %}
+        <tr>
+        <td>{{ mfc.name }}</td>
+        <td>{{ mfc.price }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.name %}">詳細</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock content %}

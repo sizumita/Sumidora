@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from .models import *
 from pprint import pprint
 from django.db.models import Q
-
+from django.db.models import Sum
 # for x in mfcb:
 #     num = x.profit
 #     mony = round((mony + num))
@@ -217,33 +217,36 @@ def fightdata(request,**kwargs):
 
 
 
+    try:
+        for x in old:
+            if x.winner == x.player1:
+                winner1 = winner1 + 1
+                lose2 = lose2 + 1
+            else:
+                winner2 = winner2 + 1
+                lose1 = lose1 + 1
 
-    for x in old:
-        if x.winner == x.player1:
-            winner1 = winner1 + 1
-            lose2 = lose2 + 1
-        else:
-            winner2 = winner2 + 1
-            lose1 = lose1 + 1
+        for x in olds:
+            if x.winner != x.player1:
+                winner1 = winner1 + 1
+                lose2 = lose2 + 1
+            else:
+                winner2 = winner2 + 1
+                lose1 = lose1 + 1
 
-    for x in olds:
-        if x.winner != x.player1:
-            winner1 = winner1 + 1
-            lose2 = lose2 + 1
-        else:
-            winner2 = winner2 + 1
-            lose1 = lose1 + 1
-
-    alls = winner1 + winner2
+        alls = winner1 + winner2
 
 
-    for x in fight:
-        if x.winner == x.player1:
-            player1 = '勝ち'
-            prize1 = x.prize
-        else:
-            player2 = '勝ち'
-            prize2 = x.prize
+        for x in fight:
+            if x.winner == x.player1:
+                player1 = '勝ち'
+                prize1 = x.prize
+            else:
+                player2 = '勝ち'
+                prize2 = x.prize
+
+    except:
+        return render_to_response('eroor.html')
 
 
     return render(request,'fight_data.html',
@@ -270,7 +273,33 @@ def fightdata(request,**kwargs):
 
 
 
-def ranking(requset,**kwargs):
-    q = kwargs['name']
-    model = MfcBet.objects.filter(name=q).only('profit').count()
+def ranking(request):
+    parm = request.GET.get("page")
+    try:
+        parm = int(parm)
+        nextpage = parm + 1
+        if parm == 1:
+            old = 1
+        else:
+            old = parm - 1
+        page = parm * 20
+        pages = page - 20
+    except:
+        pages = 0
+        page = 20
+        old = 1
+        nextpage = 2
+    param_values = request.GET.get("mode")
+    if param_values == 'bet':
+        model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
+    elif param_values == 'profit':
+        model = MfcBet.objects.all().values("name").annotate(price=Sum('profit'))
+    else:
+        model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
+    return render(request,'ranking.html',
+                  {
+                      'model' : model,
+                      'old' : old,
+                      "next" : nextpage,
+                  })
 
