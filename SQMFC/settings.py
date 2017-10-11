@@ -25,7 +25,7 @@ SECRET_KEY = '*y-j8-lg=szx8l&bulh%ael8_zs(&xow=u_v@%ftg^fp$a9!e3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["man10.red","dan5.red"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'SQMFC.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE' : 'django.db.backends.mysql',
-        'NAME' : 'man10',
+        'NAME' : 'djangosq',
         'USER' : 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'pass',
         'HOST': '',
         'PORT': '',
     }
