@@ -41,6 +41,7 @@ table {
           <th>総ベット金額</th>
           <th>獲得金額</th>
           <td>回収率</td>
+          <td>平均獲得金額</td>
         </tr>
       </thead>
       <tbody>
@@ -48,9 +49,10 @@ table {
         <td>{{ num }}回</td>
         <td>{{ win }}回</td>
         <td>{{ lose }}回</td>
-        <td>{{ bet|floatformat|intcomma }}円</td>
-        <td>{{ profit|floatformat|intcomma }}円</td>
+        <td>{{ bet|floatformat:0|intcomma }}円</td>
+        <td>{{ profit|floatformat:0|intcomma }}円</td>
         <td>{{ mony|floatformat:2 }}%</td>
+        <td>１試合あたり{{ profits|floatformat:0|intcomma }}円</td>
         </tr>
       </tbody>
     </table>

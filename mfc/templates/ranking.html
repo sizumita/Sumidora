@@ -24,8 +24,16 @@ table {
       <tbody>
         {% for mfcs in model %}
         <tr>
-        <td>{{ mfcs.name }}</td>
-        <td>{{ mfcs.price|default_if_none:'0' }}</td>
+        <td>{% ifequal mfcs.name '' %}
+            0
+            {% else %}
+            {{ mfcs.name }}
+        {% endifequal %}</td>
+        <td>{% ifequal mfcs.price '' %}
+            0
+            {% else %}
+            {{ mfcs.price }}
+        {% endifequal %}</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.name %}">詳細</a></td>
         </tr>
       {% endfor %}

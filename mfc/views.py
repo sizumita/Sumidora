@@ -166,6 +166,7 @@ def playerview(request, **kwargs):
             else:
                 lose = lose + 1
         mony = profit / bet * 100
+        profits = profit / (win + lose)
         return render(request,'playerbet.html',
                       {
                           "name" : q,
@@ -176,7 +177,8 @@ def playerview(request, **kwargs):
                           'win' : win,
                           'lose' : lose,
                           'type' : type,
-                          "param" : param_value
+                          "param" : param_value,
+                          'profits' : profits
                       },dict(kwargs))
 
 
@@ -274,21 +276,6 @@ def fightdata(request,**kwargs):
 
 
 def ranking(request):
-    parm = request.GET.get("page")
-    try:
-        parm = int(parm)
-        nextpage = parm + 1
-        if parm == 1:
-            old = 1
-        else:
-            old = parm - 1
-        page = parm * 20
-        pages = page - 20
-    except:
-        pages = 0
-        page = 20
-        old = 1
-        nextpage = 2
     param_values = request.GET.get("mode")
     if param_values == 'bet':
         model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
@@ -296,10 +283,10 @@ def ranking(request):
         model = MfcBet.objects.all().values("name").annotate(price=Sum('profit'))
     else:
         model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
+
+
     return render(request,'ranking.html',
                   {
                       'model' : model,
-                      'old' : old,
-                      "next" : nextpage,
                   })
 
