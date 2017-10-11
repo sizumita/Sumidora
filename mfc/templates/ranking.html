@@ -22,10 +22,10 @@ table {
         </tr>
       </thead>
       <tbody>
-        {% for mfc in model %}
+        {% for mfcs in model %}
         <tr>
-        <td>{{ mfc.name }}</td>
-        <td>{{ mfc.price }}</td>
+        <td>{{ mfcs.name }}</td>
+        <td>{{ mfcs.price|default_if_none:'0' }}</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.name %}">詳細</a></td>
         </tr>
       {% endfor %}
