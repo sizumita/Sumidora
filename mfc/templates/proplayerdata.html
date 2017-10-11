@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "probase.html" %}
 {% load humanize %}
 {% block title %}プレーヤーデータ{% endblock title %}
 {% block extrahead %}
@@ -14,12 +14,12 @@ table {
 {% block content %}
     <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
     <h3 class="page-header">{{ name }}の
-        MFC
+        MFCPRO
         のバトルデータ</h3>
-        <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro">　MFCPRO</a>　|　
-        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?page=1">バトル履歴</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">　MFC</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro&page=1">バトル履歴</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>　|　
-            　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?type=bet">ベットデータへ</a>
+            　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro&type=bet">ベットデータへ</a>
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -68,9 +68,11 @@ table {
             {% else %}
             {{ mfc.player2|default_if_none:"なし" }}
         {% endifequal %}</td>
-        <td>
+        <td>{% ifequal param 'pro' %}
+            <a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id %}?mode=pro">詳細</a>
+            {% else %}
             <a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id %}">詳細</a>
-        </td>
+        {% endifequal %}</td>
         </tr>
       {% endfor %}
       </tbody>

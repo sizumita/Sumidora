@@ -1,0 +1,50 @@
+{% extends "probase.html" %}
+{% load humanize %}
+{% block title %}プレーヤーデータ{% endblock title %}
+{% block extrahead %}
+{% load mfc_extras %}
+<style>
+table {
+  margin-top: 8px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
+    <h3 class="page-header">{{ name }}のMFCPROのベットデータ</h3>
+
+        <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?type=bet">MFC</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro&page=1">バトル履歴</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1">Bet履歴</a>　|　
+            　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro">バトルデータへ</a>
+
+
+
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>総Bet回数</th>
+          <th>勝ち数</th>
+          <th>負け数</th>
+          <th>総ベット金額</th>
+          <th>獲得金額</th>
+          <td>回収率</td>
+          <td>平均獲得金額</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td>{{ num }}回</td>
+        <td>{{ win }}回</td>
+        <td>{{ lose }}回</td>
+        <td>{{ bet|floatformat:0|intcomma }}円</td>
+        <td>{{ profit|floatformat:0|intcomma }}円</td>
+        <td>{{ mony|floatformat:2 }}%</td>
+        <td>１試合あたり{{ profits|floatformat:0|intcomma }}円</td>
+        </tr>
+      </tbody>
+    </table>
+{% endblock content %}

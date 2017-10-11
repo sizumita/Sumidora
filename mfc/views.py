@@ -85,16 +85,24 @@ def mfcfight(request,**kwargs):
     param_value = request.GET.get("mode")
     if param_value == 'pro':
         mfcf = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
+        return render(request, 'promfcf.html',
+                      {'mfcf': mfcf,
+                       'name': q,
+                       'page': page,
+                       'pages': pages,
+                       'next': nextpage,
+                       'old': old,
+                       'param': param_value}, dict(kwargs))
     else:
         mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
-    return render(request, 'mfcf.html',
-                  {'mfcf' : mfcf,
-                   'name' : q,
-                   'page': page,
-                   'pages': pages,
-                   'next': nextpage,
-                   'old': old,
-                   'param' : param_value},dict(kwargs))
+        return render(request, 'mfcf.html',
+                      {'mfcf' : mfcf,
+                       'name' : q,
+                       'page': page,
+                       'pages': pages,
+                       'next': nextpage,
+                       'old': old,
+                       'param' : param_value},dict(kwargs))
 
 
 
@@ -136,16 +144,28 @@ def playerview(request, **kwargs):
             playerprize = playerprize - (wins + lose)*10000
         else:
             return render_to_response("eroor.html")
-        return render(request, 'playerdata.html',
-                      {'kd' : kd,
-                       'wins' : wins,
-                       'lose' : lose,
-                       'prize' : playerprize,
-                       'score' : score,
-                       'fight' : fight,
-                       'param' : param_value,
-                       'name' : q,
-                       'type' : type},dict(kwargs))
+        if param_value == 'pro':
+            return render(request, 'proplayerdata.html',
+                          {'kd' : kd,
+                           'wins' : wins,
+                           'lose' : lose,
+                           'prize' : playerprize,
+                           'score' : score,
+                           'fight' : fight,
+                           'param' : param_value,
+                           'name' : q,
+                           'type' : type},dict(kwargs))
+        else:
+            return render(request, 'playerdata.html',
+                          {'kd' : kd,
+                           'wins' : wins,
+                           'lose' : lose,
+                           'prize' : playerprize,
+                           'score' : score,
+                           'fight' : fight,
+                           'param' : param_value,
+                           'name' : q,
+                           'type' : type},dict(kwargs))
 
     else:
         profit = 0
@@ -165,22 +185,36 @@ def playerview(request, **kwargs):
                 win = win + 1
             else:
                 lose = lose + 1
-        mony = profit / bet * 100
+        mony = profit / bet * 100 + 100
         profits = profit / (win + lose)
-        return render(request,'playerbet.html',
-                      {
-                          "name" : q,
-                          "profit" : profit,
-                          "bet" : bet,
-                          'num' : num,
-                          "mony" : mony,
-                          'win' : win,
-                          'lose' : lose,
-                          'type' : type,
-                          "param" : param_value,
-                          'profits' : profits
-                      },dict(kwargs))
-
+        if param_value == 'pro':
+            return render(request,'proplayerbet.html',
+                          {
+                              "name" : q,
+                              "profit" : profit,
+                              "bet" : bet,
+                              'num' : num,
+                              "mony" : mony,
+                              'win' : win,
+                              'lose' : lose,
+                              'type' : type,
+                              "param" : param_value,
+                              'profits' : profits
+                          },dict(kwargs))
+        else:
+            return render(request, 'playerbet.html',
+                          {
+                              "name": q,
+                              "profit": profit,
+                              "bet": bet,
+                              'num': num,
+                              "mony": mony,
+                              'win': win,
+                              'lose': lose,
+                              'type': type,
+                              "param": param_value,
+                              'profits': profits
+                          }, dict(kwargs))
 
 
 
