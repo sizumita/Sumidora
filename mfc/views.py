@@ -51,16 +51,24 @@ def mfc(request,**kwargs):
     param_values = request.GET.get("mode")
     if param_values == 'pro':
         mfcb = MfcproBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
+        return render(request, 'promfc.html',
+                      {'mfcb': mfcb,
+                       'name': q,
+                       'page': page,
+                       'pages': pages,
+                       'next': nextpage,
+                       'old': old
+                       }, dict(kwargs))
     else:
         mfcb = MfcBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
-    return render(request, 'mfc.html',
-                  {'mfcb' : mfcb,
-                   'name' : q,
-                   'page' : page,
-                   'pages' : pages,
-                   'next' : nextpage,
-                   'old' : old
-                   },dict(kwargs))
+        return render(request, 'mfc.html',
+                      {'mfcb' : mfcb,
+                       'name' : q,
+                       'page' : page,
+                       'pages' : pages,
+                       'next' : nextpage,
+                       'old' : old
+                       },dict(kwargs))
 
 
 def mfcfight(request,**kwargs):
@@ -185,7 +193,7 @@ def playerview(request, **kwargs):
                 win = win + 1
             else:
                 lose = lose + 1
-        mony = profit / bet * 100 + 100
+        mony = profit / bet * 100
         profits = profit / (win + lose)
         if param_value == 'pro':
             return render(request,'proplayerbet.html',
@@ -311,16 +319,55 @@ def fightdata(request,**kwargs):
 
 def ranking(request):
     param_values = request.GET.get("mode")
+    type = request.GET.get('type')
     if param_values == 'bet':
-        model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
+        if type == 'pro':
+            model = MfcproBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
+            title = 'Bet金額のランキング（１から１００位まで）'
+            sub = '総Bet金額'
+            unit = '円'
+        else:
+            model = MfcBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
+            title = 'Bet金額のランキング（１から１００位まで）'
+            sub = '総Bet金額'
+            unit = '円'
     elif param_values == 'profit':
-        model = MfcBet.objects.all().values("name").annotate(price=Sum('profit'))
+        if type == 'pro':
+            model = MfcproBet.objects.all().values("name").annotate(bet=Sum('profit')).order_by('-bet')[0:100]
+            title = '獲得金額のランキング（１から１００位まで）'
+            sub = '総獲得金額'
+            unit = '円'
+        else:
+            model = MfcBet.objects.all().values("name").annotate(bet=Sum('profit')).order_by('-bet')[0:100]
+            title = '獲得金額のランキング（１から１００位まで）'
+            sub = '総獲得金額'
+            unit = '円'
+    elif param_values == 'Ra':
+        """Recover amount=回収金額"""
+        if type == 'pro':
+            model = MfcproBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            title = '回収率のランキング（１から１００位まで）'
+            sub = '回収率'
+            unit = '%'
+        else:
+            model = MfcBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            title = '回収率のランキング（１から１００位まで）'
+            sub = '回収率'
+            unit = '%'
+
     else:
-        model = MfcBet.objects.all().values("name").annotate(price=Sum('bet'))
+        model = MfcBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
+        title = 'Bet金額のランキング（１から１００位まで）'
+        sub = '総Bet金額'
+        unit = '円'
+
 
 
     return render(request,'ranking.html',
                   {
                       'model' : model,
+                      "title" : title,
+                      'sub' : sub,
+                      'unit' : unit
                   })
 

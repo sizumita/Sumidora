@@ -18,8 +18,10 @@
         <nav class="navbar navbar-dark bg-primary">
           <div class="container">
             <div class="nav navbar-nav">
-{#                <a class="nav-item nav-link" href="{% url 'homebook:index' %}">URLを入れるところ</a>#}
-                <a class="nav-item nav-link">URLを入れるところ</a>
+                <a class="nav-item nav-link" href="{% url 'mfc:ranking' %}?mode=bet">Bet金額ランキング</a>
+                <a class="nav-item nav-link" href="{% url 'mfc:ranking' %}?mode=profit">獲得金額ランキング</a>
+                <a class="nav-item nav-link" href="{% url 'mfc:ranking' %}?mode=Ra">回収率ランキング</a>
+
             </div><!-- /.nav -->
           </div><!-- /.container -->
         </nav>
