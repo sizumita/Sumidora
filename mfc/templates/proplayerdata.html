@@ -16,7 +16,7 @@ table {
     <h3 class="page-header">{{ name }}の
         MFCPRO
         のバトルデータ</h3>
-        <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro">　MFC</a>　|　
+        <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}">　MFC</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro&page=1">バトル履歴</a>　|　
         <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page=1&mode=pro">Bet履歴</a>　|　
             　　　　　　　　　　　　　　　　<a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro&type=bet">ベットデータへ</a>
@@ -36,7 +36,7 @@ table {
         <td>{{ wins }}</td>
         <td>{{ lose }}</td>
         <td>{{ score }}</td>
-        <td>{{ prize|intcomma }}円</td>
+        <td align="right">{{ prize|intcomma }}円</td>
         </tr>
       </tbody>
     <tbody>
@@ -62,17 +62,16 @@ table {
         <td>{{ mfc.stage }}</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player1%}">{{ mfc.player1 }}</a></td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player2 %}">{{ mfc.player2 }}</a></td>
-        <td>{{ mfc.prize }}</td>
+        <td align="right" >{{ mfc.prize|floatformat:0|intcomma }}円</td>
         <td>{% ifequal mfc.winner mfc.uuid1 %}
             {{ mfc.player1|default_if_none:"なし" }}
             {% else %}
             {{ mfc.player2|default_if_none:"なし" }}
         {% endifequal %}</td>
-        <td>{% ifequal param 'pro' %}
+        <td>
             <a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id %}?mode=pro">詳細</a>
-            {% else %}
-            <a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.id %}">詳細</a>
-        {% endifequal %}</td>
+
+
         </tr>
       {% endfor %}
       </tbody>

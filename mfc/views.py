@@ -345,12 +345,12 @@ def ranking(request):
     elif param_values == 'Ra':
         """Recover amount=回収金額"""
         if type == 'pro':
-            model = MfcproBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            model = MfcproBet.objects.all().values("name").annotate(bet=(100+Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
             title = '回収率のランキング（１から１００位まで）'
             sub = '回収率'
             unit = '%'
         else:
-            model = MfcBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            model = MfcBet.objects.all().values("name").annotate(bet=(100+Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
             title = '回収率のランキング（１から１００位まで）'
             sub = '回収率'
             unit = '%'

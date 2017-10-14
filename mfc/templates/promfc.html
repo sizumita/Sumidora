@@ -17,8 +17,8 @@ table {
     <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?page={{ old }}&mode=pro">前のページ</a>　|　
     <a class="nav-item nav-link" href="{% url 'mfc:bet' name %}?page={{ next }}&mode=pro">次のページ</a>　|　
     <a class="nav-item nav-link" href="{% url 'mfc:bet' name  %}?page=1">MFC</a>　|　
-    <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}&mode=pro">プレイヤーデータ</a>　|　
-    <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}&mode=pro">バトル履歴</a>　|　
+    <a class="nav-item nav-link" href="{% url 'mfc:player_data' name %}?mode=pro">プレイヤーデータ</a>　|　
+    <a class="nav-item nav-link" href="{% url 'mfc:fight' name %}?mode=pro">バトル履歴</a>　|　
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
