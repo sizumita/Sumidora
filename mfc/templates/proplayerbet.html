@@ -39,10 +39,10 @@ table {
         <td>{{ num }}回</td>
         <td>{{ win }}回</td>
         <td>{{ lose }}回</td>
-        <td>{{ bet|floatformat:0|intcomma }}円</td>
-        <td>{{ profit|floatformat:0|intcomma }}円</td>
+        <td align="right">{{ bet|floatformat:0|intcomma }}円</td>
+        <td align="right">{{ profit|floatformat:0|intcomma }}円</td>
         <td>{{ mony|floatformat:2 }}%</td>
-        <td>１試合あたり{{ profits|floatformat:0|intcomma }}円</td>
+        <td align="right">１試合あたり{{ profits|floatformat:0|intcomma }}円</td>
         </tr>
       </tbody>
     </table>

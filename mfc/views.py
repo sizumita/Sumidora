@@ -345,12 +345,12 @@ def ranking(request):
     elif param_values == 'Ra':
         """Recover amount=回収金額"""
         if type == 'pro':
-            model = MfcproBet.objects.all().values("name").annotate(bet=(100+Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            model = MfcproBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
             title = '回収率のランキング（１から１００位まで）'
             sub = '回収率'
             unit = '%'
         else:
-            model = MfcBet.objects.all().values("name").annotate(bet=(100+Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
+            model = MfcBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
             title = '回収率のランキング（１から１００位まで）'
             sub = '回収率'
             unit = '%'
@@ -360,14 +360,27 @@ def ranking(request):
         title = 'Bet金額のランキング（１から１００位まで）'
         sub = '総Bet金額'
         unit = '円'
+    id = 1
+    for x in model:
+        x.update({ 'id' : id})
+        id = id + 1
 
 
 
-    return render(request,'ranking.html',
-                  {
-                      'model' : model,
-                      "title" : title,
-                      'sub' : sub,
-                      'unit' : unit
-                  })
+    if type == 'pro':
+        return render(request,'proranking.html',
+                      {
+                          'model' : model,
+                          "title" : title,
+                          'sub' : sub,
+                          'unit' : unit
+                      })
+    else:
+        return render(request,'ranking.html',
+                      {
+                          'model' : model,
+                          "title" : title,
+                          'sub' : sub,
+                          'unit' : unit
+                      })
 

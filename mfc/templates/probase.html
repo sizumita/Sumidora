@@ -2,6 +2,32 @@
     <!DOCTYPE html>
     <html lang="ja">
       <head>
+                    <style>
+              .dropdown:hover > .dropdown-menu{
+                display: block;
+            }
+              .dropdown-menu{
+    background-color:#222; /*サブメニュー背景色*/
+}
+.dropdown-menu > li > a{
+    color:#9d9d9d; /*サブメニュー文字色*/
+}
+.dropdown-menu > li > a:hover{
+    background-color:white; /*ホバー時サブメニュー背景*/
+    color:black; /*ホバー時サブメニュー文字色*/
+}
+.dropdown-menu .divider{
+    background-color:red; /*区切り線*/
+}
+.dropdown-header{
+    color:#333333; /*サブメニューテキスト表示*/
+}
+              .navbar a{
+    text-decoration:none;
+
+}
+
+          </style>
         <!-- Required meta tags always come first -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +45,28 @@
           <div class="container">
             <div class="nav navbar-nav">
 {#                <a class="nav-item nav-link" href="{% url 'homebook:index' %}">URLを入れるところ</a>#}
-                <a class="nav-item nav-link navbar-brand"><font color="white">URL</font></a>
+                                  <li  class="dropdown">
+                  <a href="#"  class="dropdown-toggle nav-item nav-link" data-toggle="dropdown"  role="button" aria-expanded="false"><font color="white">各種ランキング</font><span  class="caret"></span></a>
+                  <ul  class="dropdown-menu" role="menu">
+                  <li class="dropdown-header">MFC</li>
+                  <li class="dropdown-header"></li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=bet">Bet金額ランキング</a></li>
+                  <li class="dropdown-header"></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=profit">獲得金額ランキング</a></li>
+                  <li class="dropdown-header"></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=Ra">回収率ランキング</a></li>
+                  <li class="dropdown-header">MFCPRO</li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=bet&type=pro">Bet金額ランキング</a></li>
+                  <li class="dropdown-header"></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=profit&type=pro">獲得金額ランキング</a></li>
+                  <li class="dropdown-header"></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'mfc:ranking' %}?mode=Ra&type=pro">回収率ランキング</a></li>
+                  </ul>
+                  </li>
             </div><!-- /.nav -->
           </div><!-- /.container -->
         </nav>

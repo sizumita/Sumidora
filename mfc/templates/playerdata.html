@@ -35,8 +35,8 @@ table {
         <td>{{ kd }}</td>
         <td>{{ wins }}</td>
         <td>{{ lose }}</td>
-        <td>{{ score }}</td>
-        <td>{{ prize|intcomma }}円</td>
+        <td >{{ score }}</td>
+        <td align="right" >{{ prize|intcomma }}円</td>
         </tr>
       </tbody>
     <tbody>
@@ -62,7 +62,7 @@ table {
         <td>{{ mfc.stage }}</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player1%}">{{ mfc.player1 }}</a></td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' mfc.player2 %}">{{ mfc.player2 }}</a></td>
-        <td>{{ mfc.prize }}</td>
+        <td align="right">{{ mfc.prize|floatformat:0|intcomma }}円</td>
         <td>{% ifequal mfc.winner mfc.uuid1 %}
             {{ mfc.player1|default_if_none:"なし" }}
             {% else %}

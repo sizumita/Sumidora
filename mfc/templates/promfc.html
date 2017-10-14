@@ -35,9 +35,9 @@ table {
         <tr>
         <td>{{ mfc.datetime }}</td>
         <td>{{ mfc.fighter_name }}</td>
-        <td>{{ mfc.bet|floatformat:0|intcomma }}円</td>
+        <td align="right">{{ mfc.bet|floatformat:0|intcomma }}円</td>
         <td>{{ mfc.odds|floatformat:-2 }}</td>
-        <td>{{ mfc.profit|floatformat:0|intcomma }}円</td>
+        <td align="right">{{ mfc.profit|floatformat:0|intcomma }}円</td>
         <td><a class="nav-item nav-link" href="{% url 'mfc:fight_data' mfc.fight_id %}">詳細</a></td>
         </tr>
       {% endfor %}
