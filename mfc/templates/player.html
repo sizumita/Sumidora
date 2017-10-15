@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}プレーヤーデータ{% endblock title %}
+{% block extrahead %}
+{% load mfc_extras %}
+<style>
+table {
+  margin-top: 8px;
+}
+{#{% ifequal param 'pro' %}{% else %}{% endifequal %}#}
+</style>
+{% endblock %}
+
+{% block content %}
+    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
+    <h3 class="page-header">{{ name }}のデータ</h3>
+
+
+{% endblock content %}

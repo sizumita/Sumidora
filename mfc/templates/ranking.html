@@ -27,7 +27,7 @@ table {
         {% for place in model %}
         <tr>
         <td>{{ place.id }}位</td>
-        <td>{{ place.name }}</td>
+        <td><a class="nav-item nav-link" href="{% url 'mfc:player_data' place.name %}">{{ place.name }}</a></td>
         <th><img src="https://cravatar.eu/helmhead/{{ place.name }}/96"></th>
         <td align="right" >{{ place.bet|floatformat:0|intcomma }}{{ unit }}</td>
         </tr>

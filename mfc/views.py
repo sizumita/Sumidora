@@ -5,26 +5,19 @@ from django.http import HttpResponse
 # Create your views here.
 from .models import *
 from pprint import pprint
-from django.db.models import Q
-from django.db.models import Sum
-# for x in mfcb:
-#     num = x.profit
-#     mony = round((mony + num))
-#
-# for x in mfcpb:
-#     num = x.profit
-#     mony = round((mony + num))
-#
-# for x in mfcb:
-#     num = x.bet
-#     usemony = round((usemony + num))
-#
-# for x in mfcpb:
-#     num = x.bet
-#     usemony = round((usemony + num))
+from django.db.models import Q,Sum
 
 
+def toppage(request):
+    if request.method == 'POST':
+        q = request.POST['name']
 
+        return render(request, 'jump.html',
+                      {
+                       'name' : q,
+                       })
+
+    return render(request,'toppage.html')
 
 
 
@@ -54,8 +47,6 @@ def mfc(request,**kwargs):
         return render(request, 'promfc.html',
                       {'mfcb': mfcb,
                        'name': q,
-                       'page': page,
-                       'pages': pages,
                        'next': nextpage,
                        'old': old
                        }, dict(kwargs))

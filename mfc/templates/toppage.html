@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>タイトル</title>
+</head>
+{% block content %}
+    <font size="7">トップページ</font><br>
+    ここはMFCの個人データが見れます。
+    検索は↓<br>
+
+    <font size="6">ユーザー検索</font>
+     <form class="form" action="{% url 'mfc:toppage' %}" role="search" method="post">
+     {% csrf_token %}
+					<input type="text" name='name' class="form-control" placeholder="検索キーワード">
+				<button type="submit" class="btn btn-default" value="Submit">検索</button>
+			</form>
+{% endblock %}
+</html>

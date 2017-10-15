@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'playerdata/(?P<name>[\w-]+)/$', views.playerview, name='player_data'),
     url(r'fightdata/(?P<number>[\w-]+)/$', views.fightdata, name='fight_data'),
     url(r'ranking/$',views.ranking, name='ranking'),
+    url(r'$',views.toppage,name='toppage')
 
 ]
