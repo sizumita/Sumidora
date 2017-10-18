@@ -105,18 +105,19 @@ def playerview(request, **kwargs):
     q = kwargs['name']
     param_value = request.GET.get("mode")
     type = request.GET.get('type')
+    uuid = request.GET.get('type')
     if type != 'bet':
         wins = 0
         lose = 0
         playerprize = 0
         if param_value != "pro":
-            mfcf = MfcFight.objects.filter(player1=q)
-            mfcf2 = MfcFight.objects.filter(player2=q)
-            fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+            mfcf = MfcFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
+            mfcf2 = MfcFight.objects.filter(Q(player2=q)|Q(uuid2=uuid)).distinct()
+            fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)|Q(player2=q)|Q(uuid2=uuid)).distinct().order_by('-datetime')[0:20]
         else:
-            mfcf = MfcproFight.objects.filter(player1=q)
-            mfcf2 = MfcproFight.objects.filter(player2=q)
-            fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[0:20]
+            mfcf = MfcproFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
+            mfcf2 = MfcproFight.objects.filter(Q(player2=q)|Q(uuid2=uuid)).distinct()
+            fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)|Q(player2=q)|Q(uuid2=uuid)).distinct().order_by('-datetime')[0:20]
 
 
 
@@ -276,22 +277,38 @@ def fightdata(request,**kwargs):
     except:
         return render_to_response('eroor.html')
 
-
-    return render(request,'fight_data.html',
-                  {'fight' : fight,
-                   'bet' : bet,
-                   'player1' : player1,
-                   'player2' : player2,
-                   'pr1' : prize1,
-                   'pr2' : prize2,
-                   'winner1' : winner1,
-                   'winner2' : winner2,
-                   'lose1' : lose1,
-                   'lose2' : lose2,
-                   'alls' : alls,
-                   'param' : param_value
-                   },
-                  dict(kwargs))
+    if param_value == 'pro':
+        return render(request,'profight_data.html',
+                      {'fight' : fight,
+                       'bet' : bet,
+                       'player1' : player1,
+                       'player2' : player2,
+                       'pr1' : prize1,
+                       'pr2' : prize2,
+                       'winner1' : winner1,
+                       'winner2' : winner2,
+                       'lose1' : lose1,
+                       'lose2' : lose2,
+                       'alls' : alls,
+                       'param' : param_value
+                       },
+                      dict(kwargs))
+    else:
+        return render(request, 'fight_data.html',
+                      {'fight': fight,
+                       'bet': bet,
+                       'player1': player1,
+                       'player2': player2,
+                       'pr1': prize1,
+                       'pr2': prize2,
+                       'winner1': winner1,
+                       'winner2': winner2,
+                       'lose1': lose1,
+                       'lose2': lose2,
+                       'alls': alls,
+                       'param': param_value
+                       },
+                      dict(kwargs))
 
 
 
