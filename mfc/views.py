@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.http import Http404
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse
 # Create your views here.
 from .models import *
-from pprint import pprint
 from django.db.models import Q,Sum
 
 
@@ -18,8 +15,6 @@ def toppage(request):
                        })
 
     return render(request,'toppage.html')
-
-
 
 
 
@@ -60,6 +55,7 @@ def mfc(request,**kwargs):
                        'next' : nextpage,
                        'old' : old
                        },dict(kwargs))
+
 
 
 def mfcfight(request,**kwargs):
@@ -218,9 +214,6 @@ def playerview(request, **kwargs):
 
 
 
-
-
-
 def fightdata(request,**kwargs):
     q = kwargs['number']
     try:
@@ -302,12 +295,6 @@ def fightdata(request,**kwargs):
 
 
 
-
-
-
-
-
-
 def ranking(request):
     param_values = request.GET.get("mode")
     type = request.GET.get('type')
@@ -374,4 +361,60 @@ def ranking(request):
                           'sub' : sub,
                           'unit' : unit
                       })
+
+
+
+def playerfightview(request):
+    player1win = 0
+    player2win = 0
+    player1lose = 0
+    player2lose = 0
+    player1 = request.GET.get("p1")
+    player2 = request.GET.get("p2")
+    mode = request.GET.get('mode')
+    if mode == 'pro':
+        fight1 = MfcproFight.objects.filter(player1=player1,player2=player2)
+        fight2 = MfcproFight.objects.filter(player1=player2,player2=player1)
+        for x in fight1:
+            if x.uuid1 == x.winner:
+                player1win = player1win + 1
+                player2lose = player2lose + 1
+            else:
+                player2win = player2win + 1
+                player1lose = player1lose + 1
+
+        for x in fight2:
+            if x.uuid1 == x.winner:
+                player2win = player2win + 1
+                player1lose = player1lose + 1
+            else:
+                player1win = player1win + 1
+                player2lose = player2lose + 1
+    else:
+        fight1 = MfcFight.objects.filter(player1=player1, player2=player2)
+        fight2 = MfcFight.objects.filter(player1=player2, player2=player1)
+        for x in fight1:
+            if x.uuid1 == x.winner:
+                player1win = player1win + 1
+                player2lose = player2lose + 1
+            else:
+                player2win = player2win + 1
+                player1lose = player1lose + 1
+
+        for x in fight2:
+            if x.uuid1 == x.winner:
+                player2win = player2win + 1
+                player1lose = player1lose + 1
+            else:
+                player1win = player1win + 1
+                player2lose = player2lose + 1
+
+    return render(request,'pvpinfo.html',{
+        'p1w' : player1win,
+        'p1l' : player1lose,
+        'p2w' : player2win,
+        'p2l' : player2lose,
+        'p1' : player1,
+        'p2' : player2,
+    })
 

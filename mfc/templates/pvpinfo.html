@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}過去の対戦成績{% endblock title %}
+{% block extrahead %}
+<style>
+table {
+  margin-top: 8px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+{#    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>#}
+    <h3 class="page-header">過去の対戦成績</h3>
+    <table class="table table-striped table-bordered">
+      <tbody>
+        <tr>
+        <td>名前</td>
+        <td><img border="0" src = 'https://cravatar.eu/3d/{{ p1}}'><a class="nav-item nav-link" href="{% url 'mfc:player_data' p1%}">{{ p1 }}</a></td>
+        <td><font size="7">VS</font></td>
+        <td><img border="0" src = 'https://cravatar.eu/3d/{{ p2 }}'><a class="nav-item nav-link" href="{% url 'mfc:player_data' p2%}">{{ p2 }}</a></td>
+        </tr>
+        <tr>
+        <td>全{{ p1w|add:p1l }}戦中</td>
+        <td>{{ p1w }}勝 {{ p1l }}敗</td>
+        <td></td>
+        <td>{{ p2w }}勝 {{ p2l }}敗</td>
+        </tr>
+      </tbody>
+    </table>
+
+{% endblock %}
