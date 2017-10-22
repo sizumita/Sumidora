@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework import routers
+from minewebchat.views import ChatViewSet
 
-
-
+router = routers.DefaultRouter()
+router.register(r'chat', ChatViewSet)
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^mfc/', include('mfc.urls', namespace='mfc')),
+    url(r'^chat/' ,include('minewebchat.urls', namespace='chat'))
 ]
+
+
+

@@ -1,0 +1,55 @@
+{#{% extends "base.html" %}#}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>タイトル</title>
+          <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script>
+
+
+function loadContents() {
+    $.ajax({
+        type: "GET",
+        url: "",
+        success: function (data) {
+            $('#content').html(data);
+        },
+        error: function () {
+            alert("読み込みに失敗しました");
+        }
+    });
+}
+$(function() {
+      // 初期表示時の初回呼び出し
+  loadContents();
+  setInterval("loadContents()", 30000); // 5秒間隔で実行
+});
+  </script>
+</head>
+<body>
+<div id="content">
+{% block content %}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for chat in model%}
+        <tr>
+        <td>{{ chat.name }}</td>
+        <td>{{ chat.chat }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}
+</div>
+</body>
+</html>

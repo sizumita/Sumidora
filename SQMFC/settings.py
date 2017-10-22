@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mfc',
+    'minewebchat',
+    'rest_framework',
 
 ]
 
@@ -128,3 +130,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 NUMBER_GROUPING = 3
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "sample.routing.channel_routing",
+    },
+}
