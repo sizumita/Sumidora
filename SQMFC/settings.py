@@ -139,9 +139,6 @@ STATIC_URL = '/static/'
 
 NUMBER_GROUPING = 3
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "ROUTING": "sample.routing.channel_routing",
-    },
-}
+
+
+DATABASE_ROUTERS = ['SQMFC.router.MyAppRouter']
