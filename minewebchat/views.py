@@ -5,6 +5,7 @@ from rest_framework import viewsets, filters
 from .serializer import *
 # Create your views here.
 
+
 def nowlog(request):
     model = PdaChatLog.objects.all().order_by('-date_time')[0:30]
     if request.method == 'GET':
