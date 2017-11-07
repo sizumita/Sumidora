@@ -88,7 +88,7 @@ DATABASES = {
         'HOST': '',
         'PORT': '',
     },
-    'chat' : {        'ENGINE' : 'django.db.backends.mysql',
+    'chat' : {'ENGINE' : 'django.db.backends.mysql',
         'NAME' : 'mat',
         'USER' : 'root',
         'PASSWORD': 'pass',

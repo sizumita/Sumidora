@@ -26,7 +26,7 @@ function loadContents() {
 $(function() {
       // 初期表示時の初回呼び出し
   loadContents();
-  setInterval("loadContents()", 150000); // 15秒間隔で実行 10000が１秒
+  setInterval("loadContents()", 300000); // 15秒間隔で実行 10000が１秒
 });
   </script>
 </head>
@@ -36,6 +36,7 @@ $(function() {
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
+            <td>日時</td>
           <th>名前</th>
           <th>内容</th>
         </tr>
@@ -43,6 +44,7 @@ $(function() {
       <tbody>
         {% for chat in model%}
         <tr>
+        <td>{{ chat.date_time }}</td>
         <td>{{ chat.name }}</td>
         <td>{{ chat.chat }}</td>
         </tr>
