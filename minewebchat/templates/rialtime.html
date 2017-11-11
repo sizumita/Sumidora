@@ -44,7 +44,7 @@ $(function() {
       <tbody>
         {% for chat in model%}
         <tr>
-        <td>{{ chat.date_time }}</td>
+        <td>{{ chat.date_time|add:d }}</td>
         <td>{{ chat.name }}</td>
         <td>{{ chat.chat }}</td>
         </tr>
