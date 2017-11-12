@@ -47,6 +47,7 @@ $(function() {
         <td>{{ chat.date_time|add:d }}</td>
         <td>{{ chat.name }}</td>
         <td>{{ chat.chat }}</td>
+        <td><img border="0" src = 'https://cravatar.eu/avatar/{{ chat.name }}'></td>
         </tr>
       {% endfor %}
       </tbody>
