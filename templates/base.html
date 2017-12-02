@@ -2,79 +2,7 @@
     <!DOCTYPE html>
     <html lang="ja">
       <head>
-          <style>
-              .dropdown:hover > .dropdown-menu{
-                display: block;
-            }
-                            .dropdown:hover > .dropdown-toggle{
-                display: block;
-            }
-              .dropdown-menu{
-    background-color:#222; /*サブメニュー背景色*/
-}
-.dropdown-menu > li > a{
-    color:#9d9d9d; /*サブメニュー文字色*/
-}
-.dropdown-menu > li > a:hover{
-    background-color:white; /*ホバー時サブメニュー背景*/
-    color:black; /*ホバー時サブメニュー文字色*/
-}
-.dropdown-menu .divider{
-    background-color:red; /*区切り線*/
-}
-.dropdown-header{
-    color:#333333; /*サブメニューテキスト表示*/
-}
-              .navbar a{
-    text-decoration:none;
-}
-              .dropdown-submenu {
-  position: relative;
-}
-              .dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  -webkit-border-radius: 0 6px 6px 6px;
-  -moz-border-radius: 0 6px 6px;
-  border-radius: 0 6px 6px 6px;
-}
 
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #ccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
-  border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-  float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  -webkit-border-radius: 6px 0 6px 6px;
-  -moz-border-radius: 6px 0 6px 6px;
-  border-radius: 6px 0 6px 6px;
-}
-          </style>
         <!-- Required meta tags always come first -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -85,13 +13,15 @@
 
         <!-- Custom CSS -->
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/photo.css' %}" />
+          <link rel="stylesheet" type="text/css" href="{% static 'css/dropdown.css' %}" />
 
       </head>
       <body>
-        <nav class="navbar navbar-dark bg-primary">
+        <nav class="navbar navbar-default">
           <div class="container">
             <div class="nav navbar-nav">
-                <a class="nav-item nav-link navbar-brand" href="{% url 'mfc:toppage' %}">トップページ</a>
+                <a class="nav-item nav-link navbar-brand" href="{% url 'main' %}">トップページ</a>
 
 
 {#                <a class="nav-item nav-link" href="{% url 'mfc:ranking' %}?mode=profit">獲得金額ランキング</a>#}
@@ -99,7 +29,7 @@
                   <li  class="dropdown">
                   <a href="#"  class="dropdown-toggle nav-item nav-link navbar-brand" data-toggle="dropdown"  role="button" aria-expanded="false">各種ランキング<span  class="caret"></span></a>
                   <ul  class="dropdown-menu" role="menu">
-                  <li class="dropdown-header">MFC</li>
+                  <li class="dropdown-header"><font color="white">MFC</font></li>
                   <li class="dropdown-submenu">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">ランキング</a>
                   <ul class="dropdown-menu">
@@ -113,7 +43,7 @@
                   <li><a href="{% url 'mfc:ranking' %}?mode=Ra">回収率ランキング</a></li>
                   </ul>
                   </li>
-                  <li class="dropdown-header">MFCPRO</li>
+                  <li class="dropdown-header"><font color="white">MFCPRO</font></li>
                   <li class="dropdown-submenu">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">ランキング</a>
                   <ul class="dropdown-menu">
@@ -129,12 +59,17 @@
                   </li>
                   </ul>
                   </li>
+                <a class="nav-item nav-link navbar-brand" href="{% url 'chat:nowlog' %}">現在のチャットログ</a>
+                <form class="form" action="{% url 'main' %}" role="search" method="post">
+     {% csrf_token %}
+					<input type="text" name='name' class="form-control nav-item" placeholder="ユーザー検索" style="width:200px;">
+				<button type="submit" class="btn btn-default nav-item" value="Submit">検索</button>
+			</form>
 
             </div><!-- /.nav -->
           </div><!-- /.container -->
 
         </nav>
-
 
         {% block content %} {% endblock %}
 

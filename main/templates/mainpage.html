@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+<script type="text/javascript">
+rand = Math.floor(Math.random()*2);
+
+if (rand == 0) msg = "おはまん！";
+if (rand == 1) msg = "ブンブン！　ハローまんじゅう！";
+
+document.write(msg);
+</script>
+{% endblock %}
+</body>
+</html>

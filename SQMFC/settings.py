@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mfc',
     'minewebchat',
     'rest_framework',
+    'main',
 
 ]
 
@@ -140,5 +141,8 @@ STATIC_URL = '/static/'
 NUMBER_GROUPING = 3
 
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 DATABASE_ROUTERS = ['SQMFC.router.MyAppRouter']

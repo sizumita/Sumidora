@@ -5,16 +5,6 @@ from .models import *
 from django.db.models import Q,Sum
 
 
-def toppage(request):
-    if request.method == 'POST':
-        q = request.POST['name']
-
-        return render(request, 'jump.html',
-                      {
-                       'name' : q,
-                       })
-
-    return render(request,'toppage.html')
 
 
 
@@ -80,24 +70,18 @@ def mfcfight(request,**kwargs):
     param_value = request.GET.get("mode")
     if param_value == 'pro':
         mfcf = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
-        return render(request, 'promfcf.html',
-                      {'mfcf': mfcf,
-                       'name': q,
-                       'page': page,
-                       'pages': pages,
-                       'next': nextpage,
-                       'old': old,
-                       'param': param_value}, dict(kwargs))
+        url = 'promfcf.html'
     else:
         mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
-        return render(request, 'mfcf.html',
-                      {'mfcf' : mfcf,
-                       'name' : q,
-                       'page': page,
-                       'pages': pages,
-                       'next': nextpage,
-                       'old': old,
-                       'param' : param_value},dict(kwargs))
+        url = 'mfcf.html'
+    return render(request, url,
+                  {'mfcf' : mfcf,
+                   'name' : q,
+                   'page': page,
+                   'pages': pages,
+                   'next': nextpage,
+                   'old': old,
+                   'param' : param_value},dict(kwargs))
 
 
 
@@ -141,27 +125,19 @@ def playerview(request, **kwargs):
         else:
             return render_to_response("eroor.html")
         if param_value == 'pro':
-            return render(request, 'proplayerdata.html',
-                          {'kd' : kd,
-                           'wins' : wins,
-                           'lose' : lose,
-                           'prize' : playerprize,
-                           'score' : score,
-                           'fight' : fight,
-                           'param' : param_value,
-                           'name' : q,
-                           'type' : type},dict(kwargs))
+            url = 'proplayerdata.html'
         else:
-            return render(request, 'playerdata.html',
-                          {'kd' : kd,
-                           'wins' : wins,
-                           'lose' : lose,
-                           'prize' : playerprize,
-                           'score' : score,
-                           'fight' : fight,
-                           'param' : param_value,
-                           'name' : q,
-                           'type' : type},dict(kwargs))
+            url = 'playerdata.html'
+        return render(request, url,
+                      {'kd' : kd,
+                       'wins' : wins,
+                       'lose' : lose,
+                       'prize' : playerprize,
+                       'score' : score,
+                       'fight' : fight,
+                       'param' : param_value,
+                       'name' : q,
+                       'type' : type},dict(kwargs))
 
     else:
         profit = 0
@@ -171,46 +147,33 @@ def playerview(request, **kwargs):
         lose = 0
         if param_value == 'pro':
             mfc = MfcproBet.objects.filter(name=q)
+            url = 'proplayerbet.html'
         else:
             mfc = MfcBet.objects.filter(name=q)
+            url = 'playerbet.html'
         for x in mfc:
-            profit = profit + x.profit
+            profit += x.profit
             bet = bet + x.bet
-            num = num + 1
+            num += 1
             if x.win == 1:
-                win = win + 1
+                win += 1
             else:
-                lose = lose + 1
+                lose += 1
         mony = profit / bet * 100
         profits = profit / (win + lose)
-        if param_value == 'pro':
-            return render(request,'proplayerbet.html',
-                          {
-                              "name" : q,
-                              "profit" : profit,
-                              "bet" : bet,
-                              'num' : num,
-                              "mony" : mony,
-                              'win' : win,
-                              'lose' : lose,
-                              'type' : type,
-                              "param" : param_value,
-                              'profits' : profits
-                          },dict(kwargs))
-        else:
-            return render(request, 'playerbet.html',
-                          {
-                              "name": q,
-                              "profit": profit,
-                              "bet": bet,
-                              'num': num,
-                              "mony": mony,
-                              'win': win,
-                              'lose': lose,
-                              'type': type,
-                              "param": param_value,
-                              'profits': profits
-                          }, dict(kwargs))
+        return render(request, 'playerbet.html',
+                      {
+                          "name": q,
+                          "profit": profit,
+                          "bet": bet,
+                          'num': num,
+                          "mony": mony,
+                          'win': win,
+                          'lose': lose,
+                          'type': type,
+                          "param": param_value,
+                          'profits': profits
+                      }, dict(kwargs))
 
 
 
@@ -237,12 +200,14 @@ def fightdata(request,**kwargs):
         for x in fight:
             old = MfcFight.objects.filter(player1=x.player1, player2=x.player2)
             olds = MfcFight.objects.filter(player1=x.player2, player2=x.player1)
+        url = 'fight_data.html'
     else:
         fight = MfcproFight.objects.filter(id=q)
         bet = MfcproBet.objects.filter(fight_id=q).order_by("-bet")
         for x in fight:
             old = MfcproFight.objects.filter(player1=x.player1, player2=x.player2)
             olds = MfcproFight.objects.filter(player1=x.player2, player2=x.player1)
+        url = 'profight_data.html'
 
 
 
@@ -277,38 +242,22 @@ def fightdata(request,**kwargs):
     except:
         return render_to_response('eroor.html')
 
-    if param_value == 'pro':
-        return render(request,'profight_data.html',
-                      {'fight' : fight,
-                       'bet' : bet,
-                       'player1' : player1,
-                       'player2' : player2,
-                       'pr1' : prize1,
-                       'pr2' : prize2,
-                       'winner1' : winner1,
-                       'winner2' : winner2,
-                       'lose1' : lose1,
-                       'lose2' : lose2,
-                       'alls' : alls,
-                       'param' : param_value
-                       },
-                      dict(kwargs))
-    else:
-        return render(request, 'fight_data.html',
-                      {'fight': fight,
-                       'bet': bet,
-                       'player1': player1,
-                       'player2': player2,
-                       'pr1': prize1,
-                       'pr2': prize2,
-                       'winner1': winner1,
-                       'winner2': winner2,
-                       'lose1': lose1,
-                       'lose2': lose2,
-                       'alls': alls,
-                       'param': param_value
-                       },
-                      dict(kwargs))
+
+    return render(request, url,
+                  {'fight': fight,
+                   'bet': bet,
+                   'player1': player1,
+                   'player2': player2,
+                   'pr1': prize1,
+                   'pr2': prize2,
+                   'winner1': winner1,
+                   'winner2': winner2,
+                   'lose1': lose1,
+                   'lose2': lose2,
+                   'alls': alls,
+                   'param': param_value
+                   },
+                  dict(kwargs))
 
 
 
@@ -363,21 +312,16 @@ def ranking(request):
 
 
     if type == 'pro':
-        return render(request,'proranking.html',
-                      {
-                          'model' : model,
-                          "title" : title,
-                          'sub' : sub,
-                          'unit' : unit
-                      })
+        url = 'proranking.html'
     else:
-        return render(request,'ranking.html',
-                      {
-                          'model' : model,
-                          "title" : title,
-                          'sub' : sub,
-                          'unit' : unit
-                      })
+        url = 'proranking.html'
+    return render(request,url,
+                  {
+                      'model' : model,
+                      "title" : title,
+                      'sub' : sub,
+                      'unit' : unit
+                  })
 
 
 
@@ -392,39 +336,25 @@ def playerfightview(request):
     if mode == 'pro':
         fight1 = MfcproFight.objects.filter(player1=player1,player2=player2)
         fight2 = MfcproFight.objects.filter(player1=player2,player2=player1)
-        for x in fight1:
-            if x.uuid1 == x.winner:
-                player1win = player1win + 1
-                player2lose = player2lose + 1
-            else:
-                player2win = player2win + 1
-                player1lose = player1lose + 1
-
-        for x in fight2:
-            if x.uuid1 == x.winner:
-                player2win = player2win + 1
-                player1lose = player1lose + 1
-            else:
-                player1win = player1win + 1
-                player2lose = player2lose + 1
     else:
         fight1 = MfcFight.objects.filter(player1=player1, player2=player2)
         fight2 = MfcFight.objects.filter(player1=player2, player2=player1)
-        for x in fight1:
-            if x.uuid1 == x.winner:
-                player1win = player1win + 1
-                player2lose = player2lose + 1
-            else:
-                player2win = player2win + 1
-                player1lose = player1lose + 1
 
-        for x in fight2:
-            if x.uuid1 == x.winner:
-                player2win = player2win + 1
-                player1lose = player1lose + 1
-            else:
-                player1win = player1win + 1
-                player2lose = player2lose + 1
+    for x in fight1:
+        if x.uuid1 == x.winner:
+            player1win = player1win + 1
+            player2lose = player2lose + 1
+        else:
+            player2win = player2win + 1
+            player1lose = player1lose + 1
+
+    for x in fight2:
+        if x.uuid1 == x.winner:
+            player2win = player2win + 1
+            player1lose = player1lose + 1
+        else:
+            player1win = player1win + 1
+            player2lose = player2lose + 1
 
     return render(request,'pvpinfo.html',{
         'p1w' : player1win,

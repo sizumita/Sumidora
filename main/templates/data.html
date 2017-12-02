@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}プレーヤーデータ{% endblock title %}
+
+{% block content %}
+    <img border="0" src = 'https://cravatar.eu/3d/{{ name }}'>
+    <h3 class="page-header">{{ name }}のデータ</h3>
+    <ul><li><a href="{% url 'mfc:player_data' name %}">MFCデータ</a> </li><li>b</li><li>c</li></ul>
+
+
+{% endblock content %}
