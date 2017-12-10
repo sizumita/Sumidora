@@ -6,8 +6,6 @@ from django.db.models import Q,Sum
 
 
 
-
-
 def mfc(request,**kwargs):
     q = kwargs['name']
     page = 1
@@ -29,22 +27,19 @@ def mfc(request,**kwargs):
     param_values = request.GET.get("mode")
     if param_values == 'pro':
         mfcb = MfcproBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
-        return render(request, 'promfc.html',
-                      {'mfcb': mfcb,
-                       'name': q,
-                       'next': nextpage,
-                       'old': old
-                       }, dict(kwargs))
+        url = 'promfc.html'
     else:
         mfcb = MfcBet.objects.filter(Q(name=q)).distinct().order_by('-id')[pages:page]
-        return render(request, 'mfc.html',
-                      {'mfcb' : mfcb,
-                       'name' : q,
-                       'page' : page,
-                       'pages' : pages,
-                       'next' : nextpage,
-                       'old' : old
-                       },dict(kwargs))
+        url = 'mfc.html'
+    parameter = {
+        'mfcb' : mfcb,
+        'name' : q,
+        'page' : page,
+        'pages' : pages,
+        'next' : nextpage,
+        'old' : old
+    }
+    return render(request, url,parameter,dict(kwargs))
 
 
 
@@ -74,14 +69,16 @@ def mfcfight(request,**kwargs):
     else:
         mfcf = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)).distinct().order_by('-datetime')[pages:page]
         url = 'mfcf.html'
-    return render(request, url,
-                  {'mfcf' : mfcf,
+    parameter = {
+                    'mfcf' : mfcf,
                    'name' : q,
                    'page': page,
                    'pages': pages,
                    'next': nextpage,
                    'old': old,
-                   'param' : param_value},dict(kwargs))
+                   'param' : param_value
+                 }
+    return render(request, url,parameter,dict(kwargs))
 
 
 
@@ -89,47 +86,47 @@ def playerview(request, **kwargs):
     q = kwargs['name']
     param_value = request.GET.get("mode")
     type = request.GET.get('type')
-    uuid = request.GET.get('type')
+    uuid = type
     if type != 'bet':
         wins = 0
         lose = 0
         playerprize = 0
         if param_value != "pro":
-            mfcf = MfcFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
+            mfcfight = MfcFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
             mfcf2 = MfcFight.objects.filter(Q(player2=q)|Q(uuid2=uuid)).distinct()
             fight = MfcFight.objects.filter(Q(player1=q) | Q(player2=q)|Q(player2=q)|Q(uuid2=uuid)).distinct().order_by('-datetime')[0:20]
         else:
-            mfcf = MfcproFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
+            mfcfight = MfcproFight.objects.filter(Q(player1=q)|Q(uuid1=uuid)).distinct()
             mfcf2 = MfcproFight.objects.filter(Q(player2=q)|Q(uuid2=uuid)).distinct()
             fight = MfcproFight.objects.filter(Q(player1=q) | Q(player2=q)|Q(player2=q)|Q(uuid2=uuid)).distinct().order_by('-datetime')[0:20]
 
 
 
-        for x in mfcf:
+        for x in mfcfight:
             if x.winner == x.uuid1:
-                wins = wins + 1
+                wins += 1
                 playerprize = round(playerprize + x.prize)
             else:
-                lose = lose + 1
+                lose += 1
         for x in mfcf2:
             if x.winner != x.uuid1:
-                wins = wins + 1
+                wins += 1
             else:
-                lose = lose + 1
+                lose += 1
                 playerprize = round(playerprize + x.prize)
-        all = wins + lose + playerprize
-        if all > 0:
+        total = wins + lose + playerprize
+        if total > 0:
             score = round(playerprize / (wins + lose) * 0.001)
             kd = round((wins / lose),2)
             playerprize = playerprize - (wins + lose)*10000
         else:
             return render_to_response("eroor.html")
-        if param_value == 'pro':
-            url = 'proplayerdata.html'
-        else:
-            url = 'playerdata.html'
-        return render(request, url,
-                      {'kd' : kd,
+        url = 'playerdata.html'
+        param_value = str(param_value)
+        url = param_value + url
+        url = url.lstrip('None')
+        parameter = {
+                        'kd' : kd,
                        'wins' : wins,
                        'lose' : lose,
                        'prize' : playerprize,
@@ -137,7 +134,9 @@ def playerview(request, **kwargs):
                        'fight' : fight,
                        'param' : param_value,
                        'name' : q,
-                       'type' : type},dict(kwargs))
+                       'type' : type
+                     }
+        return render(request, url,parameter,dict(kwargs))
 
     else:
         profit = 0
@@ -161,8 +160,7 @@ def playerview(request, **kwargs):
                 lose += 1
         mony = profit / bet * 100
         profits = profit / (win + lose)
-        return render(request, 'playerbet.html',
-                      {
+        parameter = {
                           "name": q,
                           "profit": profit,
                           "bet": bet,
@@ -173,7 +171,9 @@ def playerview(request, **kwargs):
                           'type': type,
                           "param": param_value,
                           'profits': profits
-                      }, dict(kwargs))
+                      }
+        url = 'playerbet.html'
+        return render(request, url,parameter,dict(kwargs))
 
 
 
@@ -214,50 +214,49 @@ def fightdata(request,**kwargs):
     try:
         for x in old:
             if x.winner == x.player1:
-                winner1 = winner1 + 1
-                lose2 = lose2 + 1
+                winner1 += 1
+                lose2 += 1
             else:
                 winner2 = winner2 + 1
-                lose1 = lose1 + 1
-
+                lose1 += 1
         for x in olds:
-            if x.winner != x.player1:
-                winner1 = winner1 + 1
-                lose2 = lose2 + 1
-            else:
-                winner2 = winner2 + 1
-                lose1 = lose1 + 1
-
-        alls = winner1 + winner2
-
-
-        for x in fight:
             if x.winner == x.player1:
-                player1 = '勝ち'
-                prize1 = x.prize
+                winner1 += 1
+                lose2 += 1
             else:
-                player2 = '勝ち'
-                prize2 = x.prize
+                winner2 += 1
+                lose1 += 1
 
     except:
         return render_to_response('eroor.html')
 
+    alls = winner1 + winner2
 
-    return render(request, url,
-                  {'fight': fight,
-                   'bet': bet,
-                   'player1': player1,
-                   'player2': player2,
-                   'pr1': prize1,
-                   'pr2': prize2,
-                   'winner1': winner1,
-                   'winner2': winner2,
-                   'lose1': lose1,
-                   'lose2': lose2,
-                   'alls': alls,
-                   'param': param_value
-                   },
-                  dict(kwargs))
+
+    for x in fight:
+        if x.winner == x.player1:
+            player1 = '勝ち'
+            prize1 = x.prize
+        else:
+            player2 = '勝ち'
+            prize2 = x.prize
+
+    parameter = {'fight': fight,
+     'bet': bet,
+     'player1': player1,
+     'player2': player2,
+     'pr1': prize1,
+     'pr2': prize2,
+     'winner1': winner1,
+     'winner2': winner2,
+     'lose1': lose1,
+     'lose2': lose2,
+     'alls': alls,
+     'param': param_value
+     }
+
+
+    return render(request, url,parameter,dict(kwargs))
 
 
 
@@ -266,39 +265,29 @@ def ranking(request):
     type = request.GET.get('type')
     if param_values == 'bet':
         if type == 'pro':
-            model = MfcproBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
             title = 'Bet金額のランキング（１から１００位まで）'
             sub = '総Bet金額'
             unit = '円'
+            model = MfcproBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
         else:
             model = MfcBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
-            title = 'Bet金額のランキング（１から１００位まで）'
-            sub = '総Bet金額'
-            unit = '円'
     elif param_values == 'profit':
+        sub = '総獲得金額'
+        unit = '円'
+        title = '獲得金額のランキング（１から１００位まで）'
         if type == 'pro':
             model = MfcproBet.objects.all().values("name").annotate(bet=Sum('profit')).order_by('-bet')[0:100]
-            title = '獲得金額のランキング（１から１００位まで）'
-            sub = '総獲得金額'
-            unit = '円'
         else:
             model = MfcBet.objects.all().values("name").annotate(bet=Sum('profit')).order_by('-bet')[0:100]
-            title = '獲得金額のランキング（１から１００位まで）'
-            sub = '総獲得金額'
-            unit = '円'
     elif param_values == 'Ra':
+        title = '回収率のランキング（１から１００位まで）'
+        sub = '回収率'
+        unit = '%'
         """Recover amount=回収金額"""
         if type == 'pro':
             model = MfcproBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
-            title = '回収率のランキング（１から１００位まで）'
-            sub = '回収率'
-            unit = '%'
         else:
             model = MfcBet.objects.all().values("name").annotate(bet=(Sum('profit')/Sum('bet')*100)).order_by('-bet')[0:100]
-            title = '回収率のランキング（１から１００位まで）'
-            sub = '回収率'
-            unit = '%'
-
     else:
         model = MfcBet.objects.all().values("name").annotate(bet=Sum('bet')).order_by('-bet')[0:100]
         title = 'Bet金額のランキング（１から１００位まで）'
@@ -307,21 +296,20 @@ def ranking(request):
     id = 1
     for x in model:
         x.update({ 'id' : id})
-        id = id + 1
+        id += 1
 
 
-
+    parameter = {
+                  'model' : model,
+                  "title" : title,
+                  'sub' : sub,
+                  'unit' : unit,
+                  }
     if type == 'pro':
         url = 'proranking.html'
     else:
         url = 'proranking.html'
-    return render(request,url,
-                  {
-                      'model' : model,
-                      "title" : title,
-                      'sub' : sub,
-                      'unit' : unit
-                  })
+    return render(request,url,parameter)
 
 
 
@@ -342,26 +330,27 @@ def playerfightview(request):
 
     for x in fight1:
         if x.uuid1 == x.winner:
-            player1win = player1win + 1
-            player2lose = player2lose + 1
+            player1win += 1
+            player2lose += 1
         else:
-            player2win = player2win + 1
-            player1lose = player1lose + 1
+            player2win += 1
+            player1lose += 1
 
     for x in fight2:
         if x.uuid1 == x.winner:
-            player2win = player2win + 1
-            player1lose = player1lose + 1
+            player2win += 1
+            player1lose += 1
         else:
-            player1win = player1win + 1
-            player2lose = player2lose + 1
-
-    return render(request,'pvpinfo.html',{
+            player1win += 1
+            player2lose += 1
+    parameter = {
         'p1w' : player1win,
         'p1l' : player1lose,
         'p2w' : player2win,
         'p2l' : player2lose,
         'p1' : player1,
         'p2' : player2,
-    })
+    }
+    url = 'pvpinfo.html'
+    return render(request,url,parameter)
 
