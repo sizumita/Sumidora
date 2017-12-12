@@ -6,7 +6,7 @@ from django.db.models import Q,Sum
 
 
 
-def mfc(request,**kwargs):
+def mfcbet(request,**kwargs):
     q = kwargs['name']
     page = 1
     param_value = request.GET.get("page")
